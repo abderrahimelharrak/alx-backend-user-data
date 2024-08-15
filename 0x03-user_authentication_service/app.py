@@ -1,5 +1,5 @@
-
 #!/usr/bin/env python3
+
 """Route module for basic flask app API
 """
 
@@ -17,7 +17,6 @@ app = Flask(__name__)
 @app.route('/', methods=['GET'], strict_slashes=False)
 def welcome() -> str:
     """GET /
-    Returns welcome message
     """
     return jsonify({"message": "Bienvenue"})
 
@@ -25,7 +24,6 @@ def welcome() -> str:
 @app.route('/users', methods=['POST'], strict_slashes=False)
 def users() -> str:
     """POST /users, JSON: -email, -password
-    Returns end-point to register a user
     """
     email = request.form.get('email')
     password = request.form.get('password')
@@ -39,7 +37,6 @@ def users() -> str:
 @app.route('/sessions', methods=['POST'], strict_slashes=False)
 def login():
     """POST /sessions, - email, - password
-    Returns request with form data with email and password fields
     """
     user_request = request.form
     user_email = user_request.get('email', '')
@@ -56,9 +53,6 @@ def login():
 @app.route('/sessions', methods=['DELETE'], strict_slashes=False)
 def logout():
     """DELETE /sessions, - session_id
-    Find user with requested session ID, if exists, destroy session
-    Redirect user to GET /, if doesnt exists, respond with 403 HTTP
-    status
     """
     user_cookie = request.cookies.get("session_id", None)
     user = AUTH.get_user_from_session_id(user_cookie)
@@ -71,8 +65,6 @@ def logout():
 @app.route('/profile', methods=['GET'], strict_slashes=False)
 def profile() -> str:
     """GET /profile
-    Return 403 if session ID is invalid
-    Use session_id to find user
     """
     user_cookie = request.cookies.get("session_id", None)
     user = AUTH.get_user_from_session_id(user_cookie)
@@ -84,8 +76,6 @@ def profile() -> str:
 @app.route('/reset_password', methods=['POST'], strict_slashes=False)
 def get_reset_password_token_route() -> str:
     """POST /reset_password, - email,
-    Returns 403 status code if email not registered
-    Generate token and respond with 200 HTTP status if exists
     """
     user_request = request.form
     user_email = user_request.get('email', '')
@@ -99,8 +89,6 @@ def get_reset_password_token_route() -> str:
 @app.route('/reset_password', methods=['PUT'], strict_slashes=False)
 def update_password() -> str:
     """PUT /reset_password, - email, - reset_token, - new_password
-    Return a 403 HTTP code if token is invalid
-    if valid, respond with 200 HTTP code
     """
     user_email = request.form.get('email')
     reset_token = request.form.get('reset_token')

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""DB Module
+
+"""DataB Module
 """
 
 from sqlalchemy import create_engine
@@ -11,7 +12,7 @@ from user import Base, User
 
 
 class DB:
-    """DB class
+    """DataB class
     """
 
     def __init__(self):
@@ -25,7 +26,6 @@ class DB:
     @property
     def _session(self):
         """Private memoized session method (object)
-        Never used outside DB class
         """
         if self.__session is None:
             DBSession = sessionmaker(bind=self._engine)
@@ -34,7 +34,6 @@ class DB:
 
     def add_user(self, email: str, hashed_password: str) -> User:
         """Add new user to database
-        Returns a User object
         """
         user = User(email=email, hashed_password=hashed_password)
         self._session.add(user)
@@ -43,7 +42,6 @@ class DB:
 
     def find_user_by(self, **kwargs) -> User:
         """Returns first rrow found in users table
-        as filtered by methods input arguments
         """
         user_keys = ['id', 'email', 'hashed_password', 'session_id',
                      'reset_token']
@@ -57,10 +55,6 @@ class DB:
 
     def update_user(self, user_id: int, **kwargs) -> None:
         """Use find_user_by to locate the user to update
-        Update user's attribute as passed in methods argument
-        Commit changes to database
-        Raises ValueError if argument does not correspond to user
-        attribute passed
         """
         user_to_update = self.find_user_by(id=user_id)
         user_keys = ['id', 'email', 'hashed_password', 'session_id',
